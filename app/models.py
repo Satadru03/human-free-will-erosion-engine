@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, Date
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import func
 
@@ -27,7 +27,7 @@ class DailySummary(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, nullable=False, index=True)
-    date = Column(DATE, nullable=False)
+    date = Column(Date, nullable=False)
     entropy_score = Column(Float, nullable=False)
     predictability_score = Column(Float, nullable=False)
     free_will_index = Column(Float, nullable=False)

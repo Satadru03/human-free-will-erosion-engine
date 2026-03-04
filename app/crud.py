@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models import User, DecisionEvent, DailySummary
-from app.analysis.markov import Predict
+from app.schema import Predict
 
 from datetime import datetime, date
 
@@ -29,7 +29,7 @@ def login(db: Session, username: str):
         return None
     return user.password
 
-def create_event(db: Session, owner_id = int, occurred_at: datetime, domain: str, action: str):
+def create_event(db: Session, owner_id: int, occurred_at: datetime, domain: str, action: str):
     decisionevent = DecisionEvent(
         occurred_at=occurred_at,
         owner_id=owner_id,
@@ -42,34 +42,34 @@ def create_event(db: Session, owner_id = int, occurred_at: datetime, domain: str
     db.refresh(decisionevent)
     return decisionevent
 
-def get_decision_events(db: Session, username: str):
-    return db.query(DecisionEvent).filter(DecisionEvent.owner == username).all()
+def get_decision_events(db: Session, owner_id: int):
+    return db.query(DecisionEvent).filter(DecisionEvent.owner_id == owner_id).order_by(DecisionEvent.occurred_at).all()
 
-def create_dailysummary(db: Session, username: str, date: date, entropy_score: float, predictability_score: float, free_will_index: float):
-    dailysummary = DailySummary(
-        date=date,
-        decision_count=count,
-        entropy_score=entropy_score,
-        predictability_score=predictability_score,
-        free_will_index=free_will_index
-    )
+# def create_dailysummary(db: Session, username: str, date: date, entropy_score: float, predictability_score: float, free_will_index: float):
+#     dailysummary = DailySummary(
+#         date=date,
+#         decision_count=count,
+#         entropy_score=entropy_score,
+#         predictability_score=predictability_score,
+#         free_will_index=free_will_index
+#     )
 
-    db.add(dailysummary)
-    db.commit()
-    db.refresh(dailysummary)
-    return dailysummary
+#     db.add(dailysummary)
+#     db.commit()
+#     db.refresh(dailysummary)
+#     return dailysummary
 
-def get_summary(db: Session, owner: int, days: int, note: str):
-    dailysummary = DailySummary(
-        days = [],
-        note = "Metrics computed in later phase"
-    )
-    return db.query(DailySummary).filter(DailySummary.owner_id == owner).all()
+def get_summary(db: Session, owner: int):
+    # dailysummary = DailySummary(
+    #     days = [],
+    #     note = "Metrics computed in later phase"
+    # )
+    return []
 
 def get_predict_next(db: Session, owner: int):
     predict = Predict(
-        next_action = null,
-        confidence = null,
+        next_action = None,
+        confidence = None,
         reason = "Markov model not initialized (requires ≥ N transitions)"
     )
     return predict

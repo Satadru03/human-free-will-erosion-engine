@@ -75,6 +75,11 @@ class UserRead(BaseModel):
     class Config:
         from_attributes = True
 
+class APIResponse(BaseModel):
+    status: str
+    message: str
+    data: Optional[UserRead] = None
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -129,6 +134,5 @@ class DailySummaryRead(BaseModel):
     free_will_index: float
 
 class Predict(BaseModel):
-    next_action: str
-    confidence: int
-    reason: str
+    next_action: str | None
+    confidence: float | None
