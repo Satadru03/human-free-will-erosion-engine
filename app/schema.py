@@ -31,19 +31,19 @@ class TimeBucketEnum(str, Enum):
     night = "night"
     late_night = "late_night"
 
-def get_time_bucket(dt: datetime) -> str:
+def get_time_bucket(dt: datetime) -> TimeBucketEnum:
     hour = dt.hour
 
     if 5 <= hour < 12:
-        return "morning"
+        return TimeBucketEnum.morning
     elif 12 <= hour < 17:
-        return "afternoon"
+        return TimeBucketEnum.afternoon
     elif 17 <= hour < 21:
-        return "evening"
+        return TimeBucketEnum.evening
     elif 21 <= hour < 24:
-        return "night"
+        return TimeBucketEnum.night
     else:
-        return "late_night"
+        return TimeBucketEnum.late_night
 
 class UserCreate(BaseModel):
     username: str
@@ -74,6 +74,10 @@ class UserRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 class DecisionEventCreate(BaseModel):
     occurred_at: datetime
@@ -110,17 +114,21 @@ class DecisionEventCreate(BaseModel):
 class DecisionEventRead(BaseModel):
     id: int
     occurred_at: datetime
-    logged_at: datetime
+    #logged_at: datetime
     domain: DecisionDomainEnum
     action: str
     timebucket: TimeBucketEnum
     weekday: WeekdayEnum
-
     class Config:
         from_attributes = True
 
-# class DailySummaryRead(BaseModel):
-#     date: date
-#     entropy_score: float
-#     predictability_score: float
-#     free_will_index: float
+class DailySummaryRead(BaseModel):
+    date: date
+    entropy_score: float
+    predictability_score: float
+    free_will_index: float
+
+class Predict(BaseModel):
+    next_action: str
+    confidence: int
+    reason: str
