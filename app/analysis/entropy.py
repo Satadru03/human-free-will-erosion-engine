@@ -1,18 +1,48 @@
 import math
 from collections import Counter
 
-def decision_entropy(actions: list[str]) -> float:
-    total = len(actions)
+import math
+from collections import Counter
+from typing import List
+from app.models import DecisionEvent
 
-    if total == 0:
-        return 0
+from datetime import timedelta
+
+def calculate_entropy(events: List[DecisionEvent]) -> float:
+
+    if not events:
+        return 0.0
+
+    actions = [event.action for event in events]
 
     counts = Counter(actions)
 
-    entropy = 0
+    total = len(actions)
 
-    for c in counts.values():
-        p = c / total
+    entropy = 0.0
+
+    for count in counts.values():
+
+        p = count / total
+
         entropy -= p * math.log2(p)
 
-    return entropy
+    return round(entropy, 3)
+
+def rolling_entropy(events: List[DecisionEvent]):
+
+    daily_entropy = {}
+
+    events_by_day = {}
+
+    for event in events:
+
+        day = event.occurred_at.date()
+
+        events_by_day.setdefault(day, []).append(event)
+
+    for day, day_events in events_by_day.items():
+
+        daily_entropy[day] = calculate_entropy(day_events)
+
+    return daily_entropy

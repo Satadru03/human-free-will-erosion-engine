@@ -129,9 +129,9 @@ class DecisionEventRead(BaseModel):
 
 class DailySummaryRead(BaseModel):
     date: date
-    entropy_score: float
-    predictability_score: float
-    free_will_index: float
+    entropy_score: Optional[float]
+    predictability_score: Optional[float]
+    free_will_index: Optional[float]
 
 class Predict(BaseModel):
     next_action: str | None
