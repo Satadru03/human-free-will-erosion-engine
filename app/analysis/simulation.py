@@ -1,11 +1,10 @@
 import random
-from typing import List, Dict
-
-from app.models import DecisionEvent
+from collections import Counter
+from typing import List
 from app.analysis.markov import build_transition_matrix, normalize_transitions
+from app.models import DecisionEvent
 
-
-def simulate_future(events: List[DecisionEvent], steps: int = 10) -> List[str]:
+def simulate_future(events: List[DecisionEvent], steps: int = 50):
 
     if len(events) < 2:
         return []
@@ -22,15 +21,42 @@ def simulate_future(events: List[DecisionEvent], steps: int = 10) -> List[str]:
         if current_action not in probabilities:
             break
 
-        next_actions = probabilities[current_action]
+        actions = list(probabilities[current_action].keys())
+        probs = list(probabilities[current_action].values())
 
-        actions = list(next_actions.keys())
-        weights = list(next_actions.values())
-
-        next_action = random.choices(actions, weights=weights)[0]
+        next_action = random.choices(actions, probs)[0]
 
         simulated.append(next_action)
 
         current_action = next_action
 
     return simulated
+
+from collections import Counter
+
+def find_dominant_loop(sequence):
+
+    if not sequence:
+        return []
+
+    pairs = [(sequence[i], sequence[i+1]) for i in range(len(sequence)-1)]
+
+    counter = Counter(pairs)
+
+    most_common = counter.most_common(1)
+
+    if not most_common:
+        return []
+
+    return list(most_common[0][0])
+
+def simulated_predictability(sequence):
+
+    if not sequence:
+        return None
+
+    counts = Counter(sequence)
+
+    dominant = max(counts.values())
+
+    return round(dominant / len(sequence), 2)

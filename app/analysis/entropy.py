@@ -1,12 +1,7 @@
 import math
 from collections import Counter
-
-import math
-from collections import Counter
 from typing import List
 from app.models import DecisionEvent
-
-from datetime import timedelta
 
 def calculate_entropy(events: List[DecisionEvent]) -> float:
 

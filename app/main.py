@@ -1,8 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
-from fastapi.security import OAuth2PasswordRequestForm
-
-from typing import List
-from time import time
+from fastapi import FastAPI
 
 from app.database import engine, get_db
 from app.models import Base

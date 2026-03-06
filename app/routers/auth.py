@@ -11,6 +11,7 @@ from passlib.context import CryptContext
 from app.database import get_db
 from app import crud
 from app.schema import UserCreate, Token, APIResponse
+import app.logging_config as logging_config
 from app.logging_config import logger
 
 router = APIRouter(
@@ -46,7 +47,8 @@ def create_access_token(data: dict):
 def decode_token(token: str):
     return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+
     try:
         payload = decode_token(token)
         username = payload.get("sub")
@@ -55,7 +57,13 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             logger.warning("Token missing subject")
             raise HTTPException(status_code=401, detail="Invalid token")
 
-        return username
+        user = crud.get_user(db, username)
+
+        if user is None:
+            logger.warning("User from token not found")
+            raise HTTPException(status_code=401, detail="Invalid token")
+
+        return user
 
     except JWTError:
         logger.warning("Invalid or expired JWT token")
@@ -81,18 +89,15 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     }
 
 @router.post("/login", response_model=Token)
-def login_user(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)
-):
+def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
 
-    user_password = crud.login(db, form_data.username)
+    user = crud.get_user(db, form_data.username)
 
-    if not user_password or not verify_password(form_data.password, user_password):
+    if not user or not verify_password(form_data.password, user.password):
         logger.warning(f"Failed login attempt: {form_data.username}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    token = create_access_token({"sub": form_data.username})
+    token = create_access_token({"sub": user.username})
 
     logger.info(f"User login successful: {form_data.username}")
 

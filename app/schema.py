@@ -136,3 +136,8 @@ class DailySummaryRead(BaseModel):
 class Predict(BaseModel):
     next_action: str | None
     confidence: float | None
+    reason: Optional[str] = None
+
+    model_config = {
+        "exclude_none": True
+    }

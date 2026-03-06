@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models import User, DecisionEvent, DailySummary
-from app.schema import Predict
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 def create_user(db: Session, user, password_hash):
     existing = db.query(User).filter(User.username == user.username).first()
@@ -23,12 +22,6 @@ def create_user(db: Session, user, password_hash):
 def get_user(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
-def login(db: Session, username: str):
-    user = db.query(User).filter(User.username == username).first()
-    if not user:
-        return None
-    return user.password
-
 def create_event(db: Session, owner_id: int, occurred_at: datetime, domain: str, action: str):
     decisionevent = DecisionEvent(
         occurred_at=occurred_at,
@@ -45,31 +38,13 @@ def create_event(db: Session, owner_id: int, occurred_at: datetime, domain: str,
 def get_decision_events(db: Session, owner_id: int):
     return db.query(DecisionEvent).filter(DecisionEvent.owner_id == owner_id).order_by(DecisionEvent.occurred_at).all()
 
-# def create_dailysummary(db: Session, username: str, date: date, entropy_score: float, predictability_score: float, free_will_index: float):
-#     dailysummary = DailySummary(
-#         date=date,
-#         decision_count=count,
-#         entropy_score=entropy_score,
-#         predictability_score=predictability_score,
-#         free_will_index=free_will_index
-#     )
+def get_decisions_by_day(db: Session, user_id: int, target_date: date):
 
-#     db.add(dailysummary)
-#     db.commit()
-#     db.refresh(dailysummary)
-#     return dailysummary
+    start = datetime.combine(target_date, datetime.min.time())
+    end = start + timedelta(days=1)
 
-def get_summary(db: Session, owner: int):
-    # dailysummary = DailySummary(
-    #     days = [],
-    #     note = "Metrics computed in later phase"
-    # )
-    return []
-
-def get_predict_next(db: Session, owner: int):
-    predict = Predict(
-        next_action = None,
-        confidence = None,
-        reason = "Markov model not initialized (requires ≥ N transitions)"
-    )
-    return predict
+    return db.query(DecisionEvent).filter(
+        DecisionEvent.owner_id == user_id,
+        DecisionEvent.occurred_at >= start,
+        DecisionEvent.occurred_at < end
+    ).order_by(DecisionEvent.occurred_at).all()
