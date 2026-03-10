@@ -1,10 +1,11 @@
 import random
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import List
 from app.analysis.markov import build_transition_matrix, normalize_transitions
 from app.models import DecisionEvent
+from app.schema import get_time_bucket
 
-def simulate_future(events: List[DecisionEvent], steps: int = 50):
+def simulate_future(events: List[DecisionEvent], steps: int = 10):
 
     if len(events) < 2:
         return []
@@ -31,8 +32,6 @@ def simulate_future(events: List[DecisionEvent], steps: int = 50):
         current_action = next_action
 
     return simulated
-
-from collections import Counter
 
 def find_dominant_loop(sequence):
 

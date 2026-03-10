@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import secrets
+import os
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -19,7 +20,7 @@ router = APIRouter(
     tags=["Auth"]
 )
 
-SECRET_KEY = secrets.token_hex(32)
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

@@ -40,3 +40,43 @@ def log_decision(event: DecisionEventCreate, db: Session = Depends(get_db), curr
         timebucket=timebucket,
         weekday=weekday
     )
+
+@router.put("/{event_id}", response_model=DecisionEventRead)
+def update_decision(
+    event_id: int,
+    event: DecisionEventCreate,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+    db_event = crud.update_event(
+        db=db,
+        event_id=event_id,
+        owner_id=current_user.id,
+        occurred_at=event.occurred_at,
+        domain=event.domain.value,
+        action=event.action
+    )
+
+    if not db_event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    return db_event
+
+@router.delete("/{event_id}")
+def delete_decision(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+    success = crud.delete_event(
+        db=db,
+        event_id=event_id,
+        owner_id=current_user.id
+    )
+
+    if not success:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    return {"message": "Decision deleted"}

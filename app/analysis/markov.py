@@ -1,6 +1,7 @@
 from collections import defaultdict
 from typing import List, Tuple
 from app.models import DecisionEvent
+from app.schema import get_time_bucket
 
 def build_transition_matrix(events: List[DecisionEvent]):
 
@@ -14,7 +15,7 @@ def build_transition_matrix(events: List[DecisionEvent]):
         transitions[current_action][next_action] += 1
 
     return transitions
-
+    
 def normalize_transitions(transitions):
 
     probabilities = {}

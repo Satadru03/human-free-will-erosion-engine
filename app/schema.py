@@ -20,9 +20,10 @@ class DecisionDomainEnum(str, Enum):
     work = "work"
     movement = "movement"
     leisure = "leisure"
-    consumption = "consumption"
+    health = "health"
+    food = "food"
     social = "social"
-    maintenance = "maintenance"
+    entertainment = "entertainment"
 
 class TimeBucketEnum(str, Enum):
     morning = "morning"

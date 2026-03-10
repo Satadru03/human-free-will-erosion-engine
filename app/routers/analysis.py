@@ -2,18 +2,43 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from datetime import date
 from typing import List
+import math
 
 from app.database import get_db
 from app.routers.auth import get_current_user
 from app.schema import DailySummaryRead, Predict
 from app import crud
 
-import math
 from app.analysis.markov import predict_next_action
 from app.analysis.entropy import calculate_entropy
 from app.analysis.simulation import simulate_future, find_dominant_loop, simulated_predictability
+from app.analysis.metrics import free_will_index
 
 router = APIRouter(prefix="/analysis", tags=["Analysis"])
+
+@router.get("/history")
+def get_events_history(start_date: date | None = Query(default=None), end_date: date | None = Query(default=None), current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+    
+    if start_date is None and end_date is None:
+        start_date = date.today()
+        end_date = date.today()
+
+    events = crud.get_decisions_between_dates(db=db, owner_id=current_user.id, start_date=start_date, end_date=end_date)
+
+    if not events:
+        return []
+
+    results = []
+
+    for e in events:
+        results.append({
+            "id": e.id,
+            "action": e.action,
+            "domain": e.domain,
+            "timestamp": e.occurred_at
+        })
+        
+    return results
 
 @router.get("/today", response_model=DailySummaryRead)
 def get_analysis_today(target_date: date | None = Query(default=None), current_user = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -21,7 +46,7 @@ def get_analysis_today(target_date: date | None = Query(default=None), current_u
     if target_date is None:
         target_date = date.today()
 
-    events = crud.get_decisions_by_day(db, user_id=current_user.id, target_date=target_date)
+    events = crud.get_decisions_by_day(db, owner_id=current_user.id, target_date=target_date)
 
     if not events:
         return {
@@ -31,7 +56,7 @@ def get_analysis_today(target_date: date | None = Query(default=None), current_u
             "free_will_index": None
         }
 
-    unique_actions = unique_actions = len({e.action for e in events})
+    unique_actions = len({e.action for e in events})
 
     entropy_score = calculate_entropy(events)
 
@@ -40,13 +65,15 @@ def get_analysis_today(target_date: date | None = Query(default=None), current_u
     else:
         predictability_score = round(1 - entropy_score / math.log2(unique_actions), 3)
     
-    free_will_index = None
+    next_action, confidence = predict_next_action(events)
+
+    fwi = free_will_index(entropy_score, unique_actions, confidence)
 
     return {
         "date": target_date,
         "entropy_score": entropy_score,
         "predictability_score": predictability_score,
-        "free_will_index": free_will_index
+        "free_will_index": fwi
     }
 
 @router.get("/summary", response_model=List[DailySummaryRead])
@@ -69,8 +96,7 @@ def get_summary(current_user = Depends(get_current_user), db: Session = Depends(
 
         entropy_score = calculate_entropy(day_events)
 
-        actions = [e.action for e in day_events]
-        unique_actions = len(set(actions))
+        unique_actions = len({e.action for e in day_events})
 
         if len(day_events) < 2:
             predictability_score = None
@@ -80,12 +106,16 @@ def get_summary(current_user = Depends(get_current_user), db: Session = Depends(
             predictability_score = round(
                 1 - entropy_score / math.log2(unique_actions), 3
             )
+        
+        next_action, confidence = predict_next_action(day_events)
+
+        fwi = free_will_index(entropy_score, unique_actions, confidence)
 
         results.append({
             "date": day,
             "entropy_score": entropy_score,
             "predictability_score": predictability_score,
-            "free_will_index": None
+            "free_will_index": fwi
         })
 
     return results
@@ -106,11 +136,10 @@ def get_predict_next(current_user = Depends(get_current_user), db: Session = Dep
     return {
         "next_action": next_action,
         "confidence": confidence,
-        "reason": None
     }
 
 @router.get("/simulate")
-def simulate_behavior(steps: int = 50, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+def simulate_behavior(steps: int = 10, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
 
     events = crud.get_decision_events(db, current_user.id)
     simulated = simulate_future(events, steps)
