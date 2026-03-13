@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from datetime import timezone, timedelta, date
 
-API = "https://supreme-space-fiesta-6q77r6rgxjv35674-8000.app.github.dev"
+API = "https://human-free-will-api.onrender.com"
 
 st.title("Free Will Erosion Engine")
 
