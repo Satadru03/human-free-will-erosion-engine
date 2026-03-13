@@ -39,6 +39,7 @@ if st.session_state.token is None:
     with tab2:
 
         new_user = st.text_input("New Username")
+        new_email = st.text_input("Email")
         new_pass = st.text_input("New Password", type="password")
 
         if st.button("Register"):
@@ -47,6 +48,7 @@ if st.session_state.token is None:
                 f"{API}/auth/register",
                 json={
                     "username": new_user,
+                    "email": new_email,
                     "password": new_pass
                 }
             )
