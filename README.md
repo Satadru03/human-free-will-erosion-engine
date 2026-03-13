@@ -26,9 +26,7 @@ Below are some screenshots demonstrating the main features of the system.
 
 Users can create an account to start logging behavioral decisions.
 
-```
 ![Register](images/register.png)
-```
 
 ---
 
@@ -36,9 +34,7 @@ Users can create an account to start logging behavioral decisions.
 
 Authentication is handled using JWT tokens.
 
-```
 ![Login](images/login.png)
-```
 
 ---
 
@@ -46,9 +42,7 @@ Authentication is handled using JWT tokens.
 
 Users log actions with domain and timestamp.
 
-```
 ![Log Decision](images/log_decision.png)
-```
 
 ---
 
@@ -56,9 +50,7 @@ Users log actions with domain and timestamp.
 
 Shows recently logged decisions with options to edit or delete.
 
-```
 ![Recent Decisions](images/recent_decisions.png)
-```
 
 ---
 
@@ -66,9 +58,7 @@ Shows recently logged decisions with options to edit or delete.
 
 Users can filter historical decisions by date range.
 
-```
 ![Filter Decisions](images/filter_decisions.png)
-```
 
 ---
 
@@ -76,9 +66,7 @@ Users can filter historical decisions by date range.
 
 Visualizes how behavioral entropy changes over time.
 
-```
 ![Entropy Trend Graph](images/entropy_trend_graph.png)
-```
 
 ---
 
@@ -86,9 +74,7 @@ Visualizes how behavioral entropy changes over time.
 
 Shows daily entropy metrics in tabular format.
 
-```
 ![Entropy Trend Table](images/entropy_trend_table.png)
-```
 
 ---
 
@@ -96,9 +82,7 @@ Shows daily entropy metrics in tabular format.
 
 Displays the most frequent actions recorded by the system.
 
-```
 ![Action Frequency Graph](images/action_frequency_graph.png)
-```
 
 ---
 
@@ -106,9 +90,7 @@ Displays the most frequent actions recorded by the system.
 
 Tabular view of action counts.
 
-```
 ![Action Frequency Table](images/action_frequency_table.png)
-```
 
 ---
 
@@ -122,10 +104,7 @@ The simulation shows:
 * dominant habit loop
 * simulated future action sequence
 
-
-```
 ![Next Action Predictionand Behavior Simulation](images/next_action_prediction.png)
-```
 
 ---
 
@@ -618,7 +597,10 @@ Satadru Halder
 ---
 
 ## License
+
 MIT License
+
+---
 
 ## Research Idea Behind the Project
 
