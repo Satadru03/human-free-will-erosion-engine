@@ -8,11 +8,124 @@ The system logs human actions, analyzes behavioral entropy and predictability, a
 
 # Live Demo
 
-Dashboard
+Dashboard: 
 [https://human-free-will-erosion-dashboard.onrender.com/](https://human-free-will-erosion-dashboard.onrender.com/)
 
-API Documentation
+API Documentation:
 [https://human-free-will-api.onrender.com/docs](https://human-free-will-api.onrender.com/docs)
+
+---
+
+## Dashboard Walkthrough
+
+Below are some screenshots demonstrating the main features of the system.
+
+---
+
+### 1. User Registration
+
+Users can create an account to start logging behavioral decisions.
+
+```
+![Register](images/register.png)
+```
+
+---
+
+### 2. User Login
+
+Authentication is handled using JWT tokens.
+
+```
+![Login](images/login.png)
+```
+
+---
+
+### 3. Log a Decision
+
+Users log actions with domain and timestamp.
+
+```
+![Log Decision](images/log_decision.png)
+```
+
+---
+
+### 4. Recent Decisions
+
+Shows recently logged decisions with options to edit or delete.
+
+```
+![Recent Decisions](images/recent_decisions.png)
+```
+
+---
+
+### 5. Filter Decisions
+
+Users can filter historical decisions by date range.
+
+```
+![Filter Decisions](images/filter_decisions.png)
+```
+
+---
+
+### 6. Entropy Trend
+
+Visualizes how behavioral entropy changes over time.
+
+```
+![Entropy Trend Graph](images/entropy_trend_graph.png)
+```
+
+---
+
+### 7. Entropy Trend Table
+
+Shows daily entropy metrics in tabular format.
+
+```
+![Entropy Trend Table](images/entropy_trend_table.png)
+```
+
+---
+
+### 8. Action Frequency
+
+Displays the most frequent actions recorded by the system.
+
+```
+![Action Frequency Graph](images/action_frequency_graph.png)
+```
+
+---
+
+### 9. Action Frequency Table
+
+Tabular view of action counts.
+
+```
+![Action Frequency Table](images/action_frequency_table.png)
+```
+
+---
+
+### 10. Next Action Prediction and Behavior Simulation
+
+Predicts the most likely next action based on historical decision sequences and simulates future decision patterns using the learned Markov model.
+
+The simulation shows:
+
+* predicted 24-hour predictability
+* dominant habit loop
+* simulated future action sequence
+
+
+```
+![Next Action Predictionand Behavior Simulation](images/next_action_prediction.png)
+```
 
 ---
 
@@ -32,6 +145,99 @@ The **Human Free Will Erosion Engine** attempts to quantify this phenomenon by m
 The system explores a central question:
 
 > Can human behavior gradually become statistically deterministic?
+
+---
+
+## What This Project Does (Simple Explanation)
+
+Every day we make hundreds of small decisions:
+
+* waking up
+* eating
+* scrolling social media
+* studying
+* watching videos
+* exercising
+
+Over time, many of these actions become **habits**.
+
+This project tries to answer a question:
+
+**How predictable does a person's behavior become over time?**
+
+The system works like this:
+
+1. You log your daily actions.
+2. The system analyzes how repetitive your behavior is.
+3. It calculates how predictable your next action might be.
+4. It estimates a **Free Will Index** — a number that represents how routine your behavior has become.
+
+Example:
+
+If your behavior looks like this:
+
+```
+Day 1: wake_up → phone → study → gym → dinner → youtube → sleep
+Day 2: wake_up → phone → study → gym → dinner → youtube → sleep
+Day 3: wake_up → phone → study → gym → dinner → youtube → sleep
+
+Result:
+Predictability: High
+Free Will Index: Low
+Habit Loop Detected
+```
+
+The system will detect that your behavior is becoming **highly predictable**.
+
+It will then estimate:
+
+* how repetitive your behavior is
+* what you are likely to do next
+* whether you are stuck in a habit loop
+
+Suppose a user logs the following actions:
+
+```
+study → youtube → study → youtube → study → youtube
+```
+
+The system detects a repeating pattern and predicts:
+
+```
+Next likely action: study
+Confidence: 0.67
+```
+
+This means the behavior is forming a **habit loop**.
+
+---
+
+## Metrics Explained Simply
+
+### Entropy
+
+Entropy measures **how varied your behavior is**.
+
+* High entropy → many different actions
+* Low entropy → repeating the same actions
+
+---
+
+### Predictability
+
+Predictability measures **how easy it is to guess your next action**.
+
+* High predictability → strong routines
+* Low predictability → spontaneous behavior
+
+---
+
+### Free Will Index
+
+The Free Will Index is an experimental metric that estimates **how much freedom your behavior has**.
+
+* Higher value → more diverse behavior
+* Lower value → stronger habits and routines
 
 ---
 
@@ -137,13 +343,8 @@ Users can also
 
 Entropy measures how **diverse a user's actions are**.
 
-Higher entropy
-
-→ varied behavior
-
-Lower entropy
-
-→ repetitive behavior
+Higher entropy → varied behavior
+Lower entropy → repetitive behavior
 
 Computed using:
 
@@ -218,7 +419,7 @@ Example response
 
 ```json
 {
- "next_action": "youtube",
+ "next_action": "study",
  "confidence": 0.67
 }
 ```
@@ -229,9 +430,17 @@ Example response
 
 The engine can simulate **future behavioral sequences** using the Markov model.
 
+Query parameter
+
+```
+steps (int)
+```
+
+Number of future actions to simulate.
+
 Simulation outputs
 
-* predicted 24h predictability
+* predicted predictability
 * dominant habit loop
 * simulated future action sequence
 
@@ -241,12 +450,27 @@ Endpoint
 GET /analysis/simulate
 ```
 
-Example output
+Example request
 
 ```
-Predicted 24h Predictability: 0.78
-Dominant Habit Loop:
-study → youtube → study
+GET /analysis/simulate?steps=10
+```
+
+Example output
+
+```json
+{
+ "predictability_24h": 0.78,
+ "dominant_loop": ["study", "youtube", "study"],
+ "simulated_sequence": [
+  "study",
+  "youtube",
+  "study",
+  "youtube",
+  "study",
+  "youtube"
+ ]
+}
 ```
 
 ---
@@ -278,9 +502,7 @@ Simulation
 GET /analysis/simulate
 ```
 
-Full API docs
-
-[https://human-free-will-api.onrender.com/docs](https://human-free-will-api.onrender.com/docs)
+Full API docs: [https://human-free-will-api.onrender.com/docs](https://human-free-will-api.onrender.com/docs)
 
 ---
 
@@ -333,6 +555,14 @@ human-free-will-erosion-engine
 
 ---
 
+# Quick Start
+
+1. Open the dashboard  
+2. Create an account  
+3. Log daily decisions  
+4. View entropy and predictability trends  
+5. Explore habit loops and next-action predictions
+
 # Local Setup
 
 Clone the repository
@@ -381,18 +611,16 @@ Possible extensions
 
 ---
 
-# Author
+## Author
 
 Satadru Halder
-BTech Electronics & Communication Engineering
-IIIT Kalyani
-
-GitHub
-[https://github.com/Satadru03](https://github.com/Satadru03)
 
 ---
 
-# Research Idea Behind the Project
+## License
+MIT License
+
+## Research Idea Behind the Project
 
 Most ML systems predict external outcomes such as:
 
