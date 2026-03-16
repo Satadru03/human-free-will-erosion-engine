@@ -1,8 +1,8 @@
 # Human Free Will Erosion Engine
 
-A behavioral analytics system that models **how predictable human decision patterns become over time**.
+A behavioral analytics system that detects **habit loops and increasing predictability in human decision patterns over time**.
 
-The system logs human actions, analyzes behavioral entropy and predictability, and estimates a **Free Will Index** using statistical analysis, Markov transition modeling, and behavioral simulation.
+The system logs user actions, analyzes behavioral entropy and predictability, and estimates a **Free Will Index** using statistical analysis, Markov transition modeling, and behavioral simulation.
 
 ---
 
@@ -13,6 +13,18 @@ Dashboard:
 
 API Documentation:
 [https://human-free-will-api.onrender.com/docs](https://human-free-will-api.onrender.com/docs)
+
+---
+
+## Note on First Load
+
+The backend is hosted on Render's free tier, which may put the API to sleep after inactivity.
+
+If the dashboard does not load immediately, open the API documentation once to wake the server:
+
+https://human-free-will-api.onrender.com/docs
+
+After the API wakes up, the dashboard will function normally.
 
 ---
 
@@ -104,7 +116,7 @@ The simulation shows:
 * dominant habit loop
 * simulated future action sequence
 
-![Next Action Predictionand Behavior Simulation](images/next_action_prediction.png)
+![Next Action Prediction and Behavior Simulation](images/next_action_prediction.png)
 
 ---
 
@@ -123,7 +135,33 @@ The **Human Free Will Erosion Engine** attempts to quantify this phenomenon by m
 
 The system explores a central question:
 
-> Can human behavior gradually become statistically deterministic?
+> Can human decision patterns become increasingly predictable as habits form?
+
+---
+
+# Potential Applications
+
+Although this project is demonstrated using personal decision logs, the underlying behavior analytics engine can be applied in several domains.
+
+### Digital Wellbeing Apps
+Platforms that track screen time or habits could detect unhealthy behavioral loops such as:
+
+phone → instagram → youtube → phone → instagram
+
+The system can identify when behavior becomes highly predictable and notify users.
+
+### Productivity Analytics
+Productivity tools could analyze routines and detect repetitive work patterns such as:
+
+email → slack → email → slack
+
+This may indicate inefficient context switching.
+
+### Behavioral Research
+Researchers studying human behavior could use entropy metrics to quantify behavioral diversity and habit formation.
+
+### Recommendation Systems
+Platforms could adapt recommendations based on predicted next actions derived from behavioral patterns.
 
 ---
 
