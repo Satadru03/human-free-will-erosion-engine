@@ -87,7 +87,7 @@ class Token(BaseModel):
 
 class DecisionEventCreate(BaseModel):
     occurred_at: datetime
-    domain: DecisionDomainEnum
+    domain: Optional[DecisionDomainEnum] = None
     action: str
 
     @field_validator("occurred_at")

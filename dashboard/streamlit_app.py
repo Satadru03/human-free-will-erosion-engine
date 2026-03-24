@@ -86,19 +86,6 @@ else:
                 "walk"
             ]
         )
-        domain = st.selectbox(
-            "Domain",
-            [
-                "sleep",
-                "work",
-                "movement",
-                "leisure",
-                "health",
-                "entertainment",
-                "social",
-                "food"
-            ]
-        )
 
         occurred_at = st.datetime_input("Time")
 
@@ -110,7 +97,6 @@ else:
 
             payload = {
                 "action": action,
-                "domain": domain,
                 "occurred_at": occurred_at.replace(tzinfo=ist).isoformat()
             }
 
