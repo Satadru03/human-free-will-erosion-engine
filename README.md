@@ -595,10 +595,11 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
-Set environment variable
+Create a `.env` file in the root directory and add:
 
 ```
 DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+SECRET_KEY=your_secret_key_here
 ```
 
 Run backend
@@ -612,6 +613,14 @@ Run dashboard
 ```
 streamlit run dashboard/streamlit_app.py
 ```
+
+---
+
+# Limitations
+
+- The model assumes reasonably continuous user logging.
+- Large gaps between logged actions (e.g., skipping multiple activities) can introduce misleading transitions.
+- Predictability scores may be unreliable for sparse or short sequences.
 
 ---
 
